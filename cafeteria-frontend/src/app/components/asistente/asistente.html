@@ -1,0 +1,40 @@
+<div class="asistente-page">
+  <div class="asistente-header">
+    <h1>🤖 Asistente IA</h1>
+    <p>Pregúntame qué quieres comer y te recomiendo del menú</p>
+  </div>
+
+  <div class="chat-container">
+    <div class="mensajes">
+      <div *ngFor="let msg of mensajes" class="mensaje" [class.usuario]="msg.esUsuario" [class.bot]="!msg.esUsuario">
+        <div class="avatar">{{msg.esUsuario ? '👤' : '🤖'}}</div>
+        <div class="burbuja">{{msg.texto}}</div>
+      </div>
+      <div class="mensaje bot" *ngIf="cargando">
+        <div class="avatar">🤖</div>
+        <div class="burbuja typing">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <input
+        type="text"
+        [(ngModel)]="inputMensaje"
+        (keydown)="onEnter($event)"
+        placeholder="Escribe tu antojo... (ej: quiero algo dulce y económico)"
+        [disabled]="cargando">
+      <button (click)="enviar()" [disabled]="cargando || !inputMensaje.trim()">
+        Enviar ➤
+      </button>
+    </div>
+
+    <div class="sugerencias">
+      <p>Prueba preguntando:</p>
+      <button (click)="inputMensaje='Quiero algo dulce'">Algo dulce</button>
+      <button (click)="inputMensaje='¿Qué me recomiendas para desayunar?'">Para desayunar</button>
+      <button (click)="inputMensaje='Algo económico'">Algo económico</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="carrito-page">
+  <div class="carrito-header">
+    <h1>🛒 Tu Carrito</h1>
+  </div>
+
+  <div class="carrito-container" *ngIf="!pedidoEnviado">
+    <div class="empty-carrito" *ngIf="items.length === 0">
+      <span>🛒</span>
+      <h2>Tu carrito está vacío</h2>
+      <p>Agrega productos desde el menú</p>
+      <a routerLink="/menu" class="btn-primary">Ver Menú</a>
+    </div>
+
+    <div class="carrito-content" *ngIf="items.length > 0">
+      <div class="items-lista">
+        <div class="item-card" *ngFor="let item of items">
+          <div class="item-img">
+            <img *ngIf="item.producto.imagen_url" [src]="item.producto.imagen_url" [alt]="item.producto.nombre" (error)="item.producto.imagen_url=''">
+            <span *ngIf="!item.producto.imagen_url">🍽️</span>
+          </div>
+          <div class="item-info">
+            <h3>{{item.producto.nombre}}</h3>
+            <p class="item-precio">{{formatPrecio(parseFloat(item.producto.precio))}}</p>
+          </div>
+          <div class="item-cantidad">
+            <button (click)="cambiarCantidad(item, -1)">−</button>
+            <span>{{item.cantidad}}</span>
+            <button (click)="cambiarCantidad(item, 1)">+</button>
+          </div>
+          <div class="item-subtotal">
+            {{formatPrecio(parseFloat(item.producto.precio) * item.cantidad)}}
+          </div>
+          <button class="btn-quitar" (click)="quitar(item.producto.id)">✕</button>
+        </div>
+      </div>
+
+      <div class="resumen">
+        <h2>Resumen del Pedido</h2>
+        <div class="resumen-linea">
+          <span>Subtotal</span>
+          <span>{{formatPrecio(total)}}</span>
+        </div>
+        <div class="resumen-total">
+          <span>Total</span>
+          <span>{{formatPrecio(total)}}</span>
+        </div>
+        <input type="text" [(ngModel)]="cliente" placeholder="Tu nombre (opcional)" class="input-nombre">
+        <button class="btn-primary btn-confirmar" [disabled]="enviando" (click)="confirmarPedido()">
+          {{enviando ? 'Enviando...' : 'Confirmar Pedido'}}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pedido-exitoso" *ngIf="pedidoEnviado">
+    <span>✅</span>
+    <h2>¡Pedido Confirmado!</h2>
+    <p>Tu pedido ha sido recibido y está en preparación.</p>
+    <a routerLink="/menu" class="btn-primary">Seguir Comprando</a>
+  </div>
+</div>

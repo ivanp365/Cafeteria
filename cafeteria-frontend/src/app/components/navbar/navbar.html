@@ -1,0 +1,17 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <a routerLink="/" class="logo">☕ CaféApp</a>
+    <button class="hamburger" (click)="toggleMenu()">☰</button>
+    <ul class="nav-links" [class.open]="menuAbierto">
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="menuAbierto=false">Inicio</a></li>
+      <li><a routerLink="/menu" routerLinkActive="active" (click)="menuAbierto=false">Menú</a></li>
+      <li><a routerLink="/asistente" routerLinkActive="active" (click)="menuAbierto=false">🤖 Asistente IA</a></li>
+      <li><a routerLink="/admin" routerLinkActive="active" (click)="menuAbierto=false">Admin</a></li>
+      <li>
+        <a routerLink="/carrito" class="carrito-btn" (click)="menuAbierto=false">
+          🛒 <span class="badge" *ngIf="cantidadCarrito > 0">{{cantidadCarrito}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
