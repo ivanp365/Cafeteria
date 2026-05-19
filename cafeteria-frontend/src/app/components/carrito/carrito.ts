@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { ApiService, ItemCarrito } from '../../services/api';
 
 @Component({
@@ -17,7 +17,7 @@ export class Carrito implements OnInit {
   enviando = false;
   parseFloat = parseFloat;
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private router: Router) {}
 
   ngOnInit() {
     this.api.carrito$.subscribe(items => this.items = items);
@@ -52,14 +52,12 @@ export class Carrito implements OnInit {
 
     this.api.crearPedido(pedido).subscribe({
       next: () => {
-        this.pedidoEnviado = true;
         this.api.limpiarCarrito();
-        this.enviando = false;
+        this.router.navigate(['/estado-pedido']);
       },
       error: () => {
-        this.pedidoEnviado = true;
         this.api.limpiarCarrito();
-        this.enviando = false;
+        this.router.navigate(['/estado-pedido']);
       }
     });
   }

@@ -1,0 +1,44 @@
+<div class="estado-page">
+  <div class="estado-header">
+    <h1>Estado de tu Pedido</h1>
+    <p>Sigue el progreso en tiempo real</p>
+  </div>
+
+  <div class="estado-container">
+    <div class="pedido-id">
+      <span>☕</span>
+      <h2>Coffee Time</h2>
+      <p class="mensaje-actual">{{ mensaje }}</p>
+    </div>
+
+    <div class="pasos">
+      <div class="paso" *ngFor="let paso of pasos; let i = index"
+        [class.completado]="paso.completado"
+        [class.activo]="i === pasoActual - 1">
+        <div class="paso-icono">
+          <span>{{ paso.icono }}</span>
+          <div class="check" *ngIf="paso.completado">✓</div>
+        </div>
+        <div class="paso-linea" *ngIf="i < pasos.length - 1" [class.activa]="paso.completado"></div>
+        <div class="paso-info">
+          <h3>{{ paso.titulo }}</h3>
+          <p>{{ paso.descripcion }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="taza-animacion">
+      <div class="taza">☕</div>
+      <div class="vapor">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+    <div class="acciones">
+      <a routerLink="/menu" class="btn-primary">Hacer otro pedido</a>
+      <a routerLink="/" class="btn-secondary">Ir al inicio</a>
+    </div>
+  </div>
+</div>

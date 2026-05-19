@@ -45,13 +45,11 @@ export class ApiService {
   }
 
   crearPedido(pedido: any): Observable<any> {
-    return this.http.post(`${this.base}/pedidos/`, pedido);
+    return this.http.post(`${this.base}/crear-pedido/`, pedido);
   }
-
-  consultarIA(mensaje: string): Observable<any> {
-    return this.http.post(`${this.base}/ia/`, { mensaje });
-  }
-
+eliminarPedido(id: number): Observable<any> {
+  return this.http.delete(`${this.base}/pedidos/${id}/`);
+}
   agregarAlCarrito(producto: Producto) {
     const carrito = this.carritoSubject.value;
     const existente = carrito.find(i => i.producto.id === producto.id);

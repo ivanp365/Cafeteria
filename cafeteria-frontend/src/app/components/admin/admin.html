@@ -44,6 +44,7 @@
               <th>Fecha</th>
               <th>Total</th>
               <th>Items</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -53,6 +54,10 @@
               <td>{{formatFecha(pedido.fecha)}}</td>
               <td class="total-cell">{{formatPrecio(pedido.total)}}</td>
               <td>{{pedido.productos?.length || 0}} items</td>
+              <td class="acciones-cell">
+                <button class="btn-ver" (click)="verPedido(pedido)">👁️ Ver</button>
+                <button class="btn-eliminar" (click)="confirmarEliminar(pedido.id)">🗑️ Eliminar</button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -60,6 +65,56 @@
           <p>No hay pedidos aún</p>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ver Pedido -->
+<div class="modal-overlay" *ngIf="pedidoDetalle !== null" (click)="cerrarDetalle()">
+  <div class="modal modal-detalle" (click)="$event.stopPropagation()">
+    <div class="modal-detalle-header">
+      <h2>📋 Pedido #{{pedidoDetalle?.id}}</h2>
+      <button class="btn-cerrar" (click)="cerrarDetalle()">✕</button>
+    </div>
+    <div class="detalle-info">
+      <div class="detalle-fila">
+        <span>👤 Cliente</span>
+        <strong>{{pedidoDetalle?.cliente || 'Anónimo'}}</strong>
+      </div>
+      <div class="detalle-fila">
+        <span>📅 Fecha</span>
+        <strong>{{formatFecha(pedidoDetalle?.fecha)}}</strong>
+      </div>
+    </div>
+    <div class="detalle-productos">
+      <h3>Productos pedidos</h3>
+      <div class="detalle-item" *ngFor="let item of pedidoDetalle?.productos">
+        <div class="detalle-item-info">
+          <span class="detalle-nombre">{{item.producto_nombre}}</span>
+          <span class="detalle-cantidad">x{{item.cantidad}}</span>
+        </div>
+        <span class="detalle-precio">{{formatPrecio(item.precio_unitario * item.cantidad)}}</span>
+      </div>
+      <div class="detalle-vacio" *ngIf="!pedidoDetalle?.productos?.length">
+        <p>Sin detalle de productos</p>
+      </div>
+    </div>
+    <div class="detalle-total">
+      <span>Total</span>
+      <strong>{{formatPrecio(pedidoDetalle?.total)}}</strong>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div class="modal-overlay" *ngIf="pedidoAEliminar !== null" (click)="cancelarEliminar()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <span class="modal-icono">⚠️</span>
+    <h2>¿Eliminar pedido?</h2>
+    <p>Esta acción no se puede deshacer. ¿Estás seguro de eliminar el pedido <strong>#{{pedidoAEliminar}}</strong>?</p>
+    <div class="modal-btns">
+      <button class="btn-cancelar" (click)="cancelarEliminar()">Cancelar</button>
+      <button class="btn-confirmar-eliminar" (click)="eliminarPedido()">Sí, eliminar</button>
     </div>
   </div>
 </div>

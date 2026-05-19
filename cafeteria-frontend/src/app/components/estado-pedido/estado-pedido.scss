@@ -1,0 +1,171 @@
+.estado-page {
+  min-height: calc(100vh - 65px);
+  background: #f8f5f0;
+  padding-bottom: 60px;
+}
+
+.estado-header {
+  background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+  padding: 60px 24px;
+  text-align: center;
+  h1 { font-size: 2.5rem; color: #c8a165; }
+  p { color: #aaa; margin-top: 8px; }
+}
+
+.estado-container {
+  max-width: 650px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+.pedido-id {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin-bottom: 24px;
+
+  span { font-size: 3rem; display: block; margin-bottom: 8px; }
+  h2 { font-size: 1.5rem; color: #2d2d2d; }
+}
+
+.mensaje-actual {
+  color: #c8a165;
+  font-weight: 600;
+  margin-top: 8px;
+  font-size: 1rem;
+  min-height: 24px;
+  animation: fadeIn 0.5s ease;
+}
+
+.pasos {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin-bottom: 24px;
+}
+
+.paso {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 8px;
+  opacity: 0.4;
+  transition: opacity 0.5s ease;
+
+  &.completado { opacity: 1; }
+  &.activo { opacity: 1; }
+}
+
+.paso-icono {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  background: #f0ebe3;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  transition: all 0.5s ease;
+
+  .paso.completado & {
+    background: #c8a165;
+  }
+}
+
+.check {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #4caf50;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: popIn 0.3s ease;
+}
+
+.paso-linea {
+  width: 3px;
+  height: 32px;
+  background: #f0ebe3;
+  margin-left: 26px;
+  margin-bottom: 8px;
+  transition: background 0.5s ease;
+
+  &.activa { background: #c8a165; }
+}
+
+.paso-info {
+  padding-top: 8px;
+  h3 { font-size: 1rem; color: #2d2d2d; font-weight: 600; }
+  p { font-size: 0.85rem; color: #888; margin-top: 2px; }
+}
+
+.taza-animacion {
+  text-align: center;
+  margin: 24px 0;
+  position: relative;
+}
+
+.taza {
+  font-size: 5rem;
+  animation: float 2s ease-in-out infinite;
+  display: inline-block;
+}
+
+.vapor {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: -10px;
+
+  span {
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(to top, #c8a165, transparent);
+    border-radius: 4px;
+    animation: vapor 1.5s ease-in-out infinite;
+
+    &:nth-child(2) { animation-delay: 0.3s; }
+    &:nth-child(3) { animation-delay: 0.6s; }
+  }
+}
+
+.acciones {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  a { text-decoration: none; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes vapor {
+  0%, 100% { opacity: 0; transform: translateY(0) scaleX(1); }
+  50% { opacity: 1; transform: translateY(-15px) scaleX(1.2); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); }
+  70% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
