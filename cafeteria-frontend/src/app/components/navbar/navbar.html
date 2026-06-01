@@ -6,7 +6,9 @@
       <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="menuAbierto=false">Inicio</a></li>
       <li><a routerLink="/menu" routerLinkActive="active" (click)="menuAbierto=false">Menú</a></li>
       <li><a routerLink="/asistente" routerLinkActive="active" (click)="menuAbierto=false">🤖 Asistente IA</a></li>
-      <li><a routerLink="/admin" routerLinkActive="active" (click)="menuAbierto=false">Admin</a></li>
+      <li *ngIf="isAdmin"><a routerLink="/admin" routerLinkActive="active" (click)="menuAbierto=false">Admin</a></li>
+      <li *ngIf="isAdmin"><a class="btn-logout" (click)="logout()">Cerrar sesión</a></li>
+      <li *ngIf="!isAdmin"><a routerLink="/login" routerLinkActive="active" (click)="menuAbierto=false">🔐 Admin</a></li>
       <li>
         <a routerLink="/carrito" class="carrito-btn" (click)="menuAbierto=false">
           🛒 <span class="badge" *ngIf="cantidadCarrito > 0">{{cantidadCarrito}}</span>

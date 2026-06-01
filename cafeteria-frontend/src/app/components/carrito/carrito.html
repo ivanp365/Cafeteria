@@ -53,9 +53,22 @@
   </div>
 
   <div class="pedido-exitoso" *ngIf="pedidoEnviado">
-    <span>✅</span>
-    <h2>¡Pedido Confirmado!</h2>
-    <p>Tu pedido ha sido recibido y está en preparación.</p>
-    <a routerLink="/menu" class="btn-primary">Seguir Comprando</a>
+  <span>✅</span>
+  <h2>¡Pedido Confirmado!</h2>
+  <p>Tu pedido ha sido recibido y está en preparación.</p>
+
+  <div class="resumen-compra" *ngIf="itemsComprados.length > 0">
+    <h3>Resumen de tu compra:</h3>
+    <div class="item-comprado" *ngFor="let item of itemsComprados">
+      <span>{{item.nombre}}</span>
+      <div class="stock-restante">
+        <span class="qty-comprada">Compraste: {{item.cantidad}}</span>
+        <span class="qty-restante" [class.bajo]="item.stockRestante <= 5">
+          Quedan: {{item.stockRestante}}
+        </span>
+      </div>
+    </div>
   </div>
+
+  <a routerLink="/menu" class="btn-primary">Seguir Comprando</a>
 </div>

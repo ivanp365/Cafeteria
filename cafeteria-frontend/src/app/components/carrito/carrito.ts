@@ -16,6 +16,7 @@ export class Carrito implements OnInit {
   pedidoEnviado = false;
   enviando = false;
   parseFloat = parseFloat;
+  itemsComprados: any[] = [];
 
   constructor(private api: ApiService, private router: Router) {}
 
@@ -40,24 +41,35 @@ export class Carrito implements OnInit {
     if (this.items.length === 0) return;
     this.enviando = true;
 
+    const itemsParaEnviar = this.items.map(i => ({
+      producto_id: i.producto.id,
+      cantidad: i.cantidad,
+      precio_unitario: i.producto.precio,
+      nombre: i.producto.nombre,
+      stockActual: parseFloat(i.producto.stock?.toString() || '0')
+    }));
+
     const pedido = {
       cliente: this.cliente || 'Anónimo',
       total: this.total,
-      items: this.items.map(i => ({
-        producto_id: i.producto.id,
-        cantidad: i.cantidad,
-        precio_unitario: i.producto.precio
-      }))
+      items: itemsParaEnviar
     };
 
     this.api.crearPedido(pedido).subscribe({
       next: () => {
+        this.itemsComprados = itemsParaEnviar.map(i => ({
+          nombre: i.nombre,
+          cantidad: i.cantidad,
+          stockRestante: Math.max(0, i.stockActual - i.cantidad)
+        }));
+        this.pedidoEnviado = true;
         this.api.limpiarCarrito();
-        this.router.navigate(['/estado-pedido']);
+        this.enviando = false;
       },
-      error: () => {
-        this.api.limpiarCarrito();
-        this.router.navigate(['/estado-pedido']);
+      error: (err) => {
+        const msg = err.error?.error || 'Error al procesar el pedido';
+        alert(msg);
+        this.enviando = false;
       }
     });
   }

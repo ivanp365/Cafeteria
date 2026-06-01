@@ -1,45 +1,87 @@
 <div class="admin-page">
   <div class="admin-header">
-    <h1>📊 Panel Admin</h1>
-    <p>Gestión de la cafetería</p>
+    <div class="header-left">
+      <h1>📊 Panel Admin</h1>
+      <p>Gestión de Coffee Time</p>
+    </div>
+    <div class="header-fecha">
+      Hoy
+      <span>{{formatFecha(hoy)}}</span>
+    </div>
   </div>
 
   <div class="admin-container">
     <div class="stats-grid">
       <div class="stat-card">
-        <span class="stat-icon">📦</span>
-        <div>
+        <div class="stat-icon">📦</div>
+        <div class="stat-info">
           <h3>{{pedidos.length}}</h3>
           <p>Pedidos Totales</p>
         </div>
       </div>
       <div class="stat-card">
-        <span class="stat-icon">💰</span>
-        <div>
+        <div class="stat-icon">💰</div>
+        <div class="stat-info">
           <h3>{{formatPrecio(totalVentas)}}</h3>
           <p>Ventas Totales</p>
         </div>
       </div>
       <div class="stat-card">
-        <span class="stat-icon">🍽️</span>
-        <div>
+        <div class="stat-icon">🍽️</div>
+        <div class="stat-info">
           <h3>{{productos.length}}</h3>
           <p>Productos</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-info">
+          <h3>{{formatPrecio(totalVentas / (pedidos.length || 1))}}</h3>
+          <p>Ticket Promedio</p>
         </div>
       </div>
     </div>
 
     <div class="loading" *ngIf="cargando">
       <div class="spinner"></div>
+      <p>Cargando datos...</p>
     </div>
 
-    <div class="tabla-section" *ngIf="!cargando">
-      <h2>Últimos Pedidos</h2>
-      <div class="tabla-container">
+    <div *ngIf="!cargando">
+      <div class="graficas-grid">
+        <div class="grafica-card grafica-grande">
+          <div class="grafica-titulo">
+            <h3>Ventas por día</h3>
+            <span class="grafica-badge">Últimos 7 días</span>
+          </div>
+          <canvas #graficaVentas></canvas>
+        </div>
+        <div class="grafica-card">
+          <div class="grafica-titulo">
+            <h3>Por categoría</h3>
+          </div>
+          <canvas #graficaCategorias></canvas>
+        </div>
+      </div>
+
+      <div class="graficas-fila2">
+        <div class="grafica-card">
+          <div class="grafica-titulo">
+            <h3>Productos más vendidos</h3>
+          </div>
+          <canvas #graficaProductos></canvas>
+        </div>
+      </div>
+
+      <div class="tabla-section">
+        <div class="tabla-header">
+          <h2>Últimos Pedidos</h2>
+          <span class="total-badge">{{pedidos.length}} pedidos</span>
+        </div>
         <table>
           <thead>
             <tr>
-              <th>#</th>
+              <th>ID</th>
               <th>Cliente</th>
               <th>Fecha</th>
               <th>Total</th>
@@ -50,10 +92,15 @@
           <tbody>
             <tr *ngFor="let pedido of pedidos">
               <td><span class="id-badge">#{{pedido.id}}</span></td>
-              <td>{{pedido.cliente || 'Anónimo'}}</td>
+              <td>
+                <div class="cliente-cell">
+                  <div class="avatar">{{(pedido.cliente || 'A')[0].toUpperCase()}}</div>
+                  {{pedido.cliente || 'Anónimo'}}
+                </div>
+              </td>
               <td>{{formatFecha(pedido.fecha)}}</td>
               <td class="total-cell">{{formatPrecio(pedido.total)}}</td>
-              <td>{{pedido.productos?.length || 0}} items</td>
+              <td><span class="items-badge">{{pedido.productos?.length || 0}} items</span></td>
               <td class="acciones-cell">
                 <button class="btn-ver" (click)="verPedido(pedido)">👁️ Ver</button>
                 <button class="btn-eliminar" (click)="confirmarEliminar(pedido.id)">🗑️ Eliminar</button>
@@ -62,6 +109,7 @@
           </tbody>
         </table>
         <div class="empty-tabla" *ngIf="pedidos.length === 0">
+          <span>📭</span>
           <p>No hay pedidos aún</p>
         </div>
       </div>

@@ -1,4 +1,3 @@
-<p>menu works!</p>
 <div class="menu-page">
   <div class="menu-header">
     <h1>Nuestro Menú</h1>
@@ -20,18 +19,27 @@
   </div>
 
   <div class="productos-grid" *ngIf="!cargando">
-    <div class="producto-card" *ngFor="let producto of productos">
+    <div class="producto-card" *ngFor="let producto of productos" [class.agotado]="producto.stock === 0">
       <div class="producto-img">
         <img *ngIf="producto.imagen_url" [src]="producto.imagen_url" [alt]="producto.nombre" (error)="producto.imagen_url=''">
         <span *ngIf="!producto.imagen_url">🍽️</span>
+        <div class="agotado-badge" *ngIf="producto.stock === 0">Agotado</div>
       </div>
       <div class="producto-info">
         <span class="categoria-tag">{{producto.categoria_nombre}}</span>
         <h3>{{producto.nombre}}</h3>
+        <div class="stock-info" [class.stock-bajo]="producto.stock > 0 && producto.stock <= 5" [class.stock-ok]="producto.stock > 5">
+          <span *ngIf="producto.stock === 0">❌ Agotado</span>
+          <span *ngIf="producto.stock > 0 && producto.stock <= 5">⚠️ Solo quedan {{producto.stock}}</span>
+          <span *ngIf="producto.stock > 5">✅ Disponibles: {{producto.stock}}</span>
+        </div>
         <div class="producto-footer">
           <span class="precio">{{formatPrecio(producto.precio)}}</span>
-          <button class="btn-agregar" [class.agregado]="agregados[producto.id]" (click)="agregar(producto)">
-            {{agregados[producto.id] ? '✓ Agregado' : '+ Agregar'}}
+          <button class="btn-agregar"
+            [class.agregado]="agregados[producto.id]"
+            [disabled]="producto.stock === 0"
+            (click)="agregar(producto)">
+            {{producto.stock === 0 ? 'Agotado' : agregados[producto.id] ? '✓ Agregado' : '+ Agregar'}}
           </button>
         </div>
       </div>

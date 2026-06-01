@@ -153,3 +153,46 @@ h3 {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+.agotado {
+  opacity: 0.6;
+  .producto-img { filter: grayscale(50%); }
+}
+
+.agotado-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.producto-img { position: relative; }
+
+.stock-info {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 6px 0;
+  padding: 4px 10px;
+  border-radius: 50px;
+  display: inline-block;
+}
+
+.stock-ok {
+  background: rgba(76,175,80,0.1);
+  color: #4caf50;
+}
+
+.stock-bajo {
+  background: rgba(255,152,0,0.1);
+  color: #ff9800;
+}
+
+.btn-agregar:disabled {
+  background: #ccc !important;
+  cursor: not-allowed;
+}

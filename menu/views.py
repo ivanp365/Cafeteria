@@ -1,15 +1,16 @@
-import json
-import urllib.request
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.contrib.auth import authenticate
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Categoria, Producto, Pedido
+from .models import Categoria, Producto, Pedido, PedidoProducto
 from .serializers import CategoriaSerializer, ProductoSerializer, PedidoSerializer
+
 
 class CategoriaViewSet(viewsets.ModelViewSet):
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
+
 
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
@@ -17,48 +18,56 @@ class ProductoViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['categoria']
 
+
 class PedidoViewSet(viewsets.ModelViewSet):
     queryset = Pedido.objects.all()
     serializer_class = PedidoSerializer
 
+
 @api_view(['POST'])
-def asistente_ia(request):
-    mensaje = request.data.get('mensaje', '')
-    productos = list(Producto.objects.select_related('categoria').values(
-        'nombre', 'precio', 'categoria__nombre'
-    ))
-    
-    menu_texto = "\n".join([
-        f"- {p['nombre']} (${p['precio']}) - Categoría: {p['categoria__nombre']}"
-        for p in productos
-    ])
-    
-    prompt = f"""Eres el asistente amigable de una cafetería. 
-El menú disponible es:
-{menu_texto}
+def login_admin(request):
+    username = request.data.get('username', '')
+    password = request.data.get('password', '')
+    user = authenticate(username=username, password=password)
+    if user is not None and user.is_staff:
+        return Response({'ok': True, 'mensaje': 'Bienvenido admin'})
+    return Response({'ok': False, 'mensaje': 'Credenciales incorrectas'}, status=status.HTTP_401_UNAUTHORIZED)
 
-El cliente dice: "{mensaje}"
 
-Responde de forma amigable, breve y recomienda productos específicos del menú."""
+@api_view(['POST'])
+def crear_pedido(request):
+    cliente = request.data.get('cliente', 'Anonimo')
+    total = request.data.get('total', 0)
+    items = request.data.get('items', [])
 
-    data = json.dumps({
-        "model": "claude-sonnet-4-20250514",
-        "max_tokens": 300,
-        "messages": [{"role": "user", "content": prompt}]
-    }).encode('utf-8')
-    
-    req = urllib.request.Request(
-        'https://api.anthropic.com/v1/messages',
-        data=data,
-        headers={
-            'Content-Type': 'application/json',
-            'x-api-key': 'TU_API_KEY_AQUI',
-            'anthropic-version': '2023-06-01'
-        }
-    )
-    
-    with urllib.request.urlopen(req) as response:
-        result = json.loads(response.read())
-        respuesta = result['content'][0]['text']
-    
-    return Response({'respuesta': respuesta})
+    pedido = Pedido.objects.create(cliente=cliente, total=total)
+
+    for item in items:
+        try:
+            producto = Producto.objects.get(id=item['producto_id'])
+            cantidad = item['cantidad']
+
+            if producto.stock >= cantidad:
+                producto.stock -= cantidad
+                producto.save()
+            else:
+                pedido.delete()
+                return Response(
+                    {'error': f'Stock insuficiente para {producto.nombre}. Stock disponible: {producto.stock}'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            PedidoProducto.objects.create(
+                pedido=pedido,
+                producto=producto,
+                cantidad=cantidad,
+                precio_unitario=item['precio_unitario']
+            )
+        except Producto.DoesNotExist:
+            pass
+
+    return Response({
+        'id': pedido.id,
+        'mensaje': 'Pedido creado exitosamente',
+        'total': str(pedido.total)
+    }, status=status.HTTP_201_CREATED)

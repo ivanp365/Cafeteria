@@ -88,3 +88,10 @@
     &.open { display: flex; }
   }
 }
+.btn-logout {
+  color: #e53935 !important;
+  cursor: pointer;
+  &:hover {
+    background: rgba(229,57,53,0.1) !important;
+  }
+}

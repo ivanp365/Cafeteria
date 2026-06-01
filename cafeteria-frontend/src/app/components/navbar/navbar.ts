@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api';
 
@@ -13,12 +13,21 @@ export class Navbar implements OnInit {
   cantidadCarrito = 0;
   menuAbierto = false;
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private router: Router) {}
 
   ngOnInit() {
     this.api.carrito$.subscribe(() => {
       this.cantidadCarrito = this.api.getCantidadCarrito();
     });
+  }
+
+  get isAdmin(): boolean {
+    return typeof window !== 'undefined' && localStorage.getItem('isAdmin') === 'true';
+  }
+
+  logout() {
+    localStorage.removeItem('isAdmin');
+    this.router.navigate(['/']);
   }
 
   toggleMenu() {

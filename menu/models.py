@@ -11,6 +11,7 @@ class Producto(models.Model):
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     imagen_url = models.URLField(blank=True, null=True)
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='productos')
+    stock = models.PositiveIntegerField(default=10)
 
     def __str__(self):
         return self.nombre

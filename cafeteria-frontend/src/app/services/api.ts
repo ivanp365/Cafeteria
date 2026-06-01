@@ -50,6 +50,9 @@ export class ApiService {
 eliminarPedido(id: number): Observable<any> {
   return this.http.delete(`${this.base}/pedidos/${id}/`);
 }
+loginAdmin(username: string, password: string): Observable<any> {
+  return this.http.post(`${this.base}/login/`, { username, password });
+}
   agregarAlCarrito(producto: Producto) {
     const carrito = this.carritoSubject.value;
     const existente = carrito.find(i => i.producto.id === producto.id);
@@ -79,4 +82,13 @@ eliminarPedido(id: number): Observable<any> {
   getCantidadCarrito(): number {
     return this.carritoSubject.value.reduce((total, item) => total + item.cantidad, 0);
   }
+}
+export interface Producto {
+  id: number;
+  nombre: string;
+  precio: string;
+  imagen_url: string;
+  categoria: number;
+  categoria_nombre: string;
+  stock: number;
 }

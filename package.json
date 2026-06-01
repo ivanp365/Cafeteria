@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "chart.js": "^4.5.1",
     "zone.js": "^0.16.2"
   }
 }

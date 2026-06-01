@@ -1,0 +1,35 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-logo">☕</div>
+    <h1>Coffee Time</h1>
+    <p class="login-sub">Panel de Administración</p>
+
+    <div class="login-form">
+      <div class="input-group">
+        <label>Usuario</label>
+        <input
+          type="text"
+          [(ngModel)]="username"
+          (keydown)="onEnter($event)"
+          placeholder="admin"
+          [disabled]="cargando">
+      </div>
+      <div class="input-group">
+        <label>Contraseña</label>
+        <input
+          type="password"
+          [(ngModel)]="password"
+          (keydown)="onEnter($event)"
+          placeholder="••••••"
+          [disabled]="cargando">
+      </div>
+
+      <div class="error-msg" *ngIf="error">⚠️ {{error}}</div>
+
+      <button class="btn-login" (click)="login()" [disabled]="cargando">
+        <span *ngIf="!cargando">Ingresar</span>
+        <span *ngIf="cargando">Verificando...</span>
+      </button>
+    </div>
+  </div>
+</div>
